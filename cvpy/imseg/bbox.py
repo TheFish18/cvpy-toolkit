@@ -11,6 +11,12 @@ from cvpy.imseg import Contours
 
 
 class BBox:
+    """
+    Bounding Boxes
+
+    Must pass bounding box top left (x, y) coordinates and well as
+    bounding box width, height (w, h) or bottom right coordinates (xf, yf)
+    """
     def __init__(
             self,
             x: int,
@@ -23,12 +29,12 @@ class BBox:
         """
         BBox container class.
         Args:
-            x: bounding box top left x coordinate
-            y: bounding box top left y coordinate
-            w: either pass w and h OR
-            h:
-            xf: pass xf and yf
-            yf:
+            x: bounding box top left x coordinate, required
+            y: bounding box top left y coordinate, required
+            w: bounding box width
+            h: bounding box height
+            xf: bounding box bottom right x coordinate
+            yf: bounding box bottom right y coordinate
         """
         def check_ints(**kwargs):
             for key, val in kwargs.items():
@@ -40,27 +46,37 @@ class BBox:
         self.x = x
         self.y = y
 
-        assert (w is not None and h is not None) or (xf is not None and yf is not None), "Must pass h/w or xf/yf"
-
-        if w is not None and h is not None:
+        if (w is not None and h is not None) and (xf is None and yf is None):
             check_ints(w=w, h=h)
             self.w = w
             self.h = h
             self.xf = self.x + self.w
             self.yf = self.y + self.h
-
-        elif xf is not None and yf is not None:
+        elif (xf is not None and yf is not None) and (w is None and h is None):
             check_ints(xf=xf, yf=yf)
             self.xf = xf
             self.yf = yf
             self.w = self.xf - self.x
             self.h = self.yf - self.y
+        else:
+            raise ValueError(
+                "Both height and width must be specified or both xf and yf must be specified, "
+                "but passing some combination of both is un-allowed as the dimensions can be ambiguous"
+            )
 
-        # TODO(joshfisher): I return the area as a method, refactor this to self.area
         self.area = self.w * self.h
-        self.xc = int((self.xf + self.x) / 2)
-        self.yc = int((self.yf + self.y) / 2)
-        self.centroid = np.array([[self.xc], [self.yc]])
+
+    @property
+    def centroid(self) -> np.ndarray:
+        """
+        Get centroid of bounding box.
+
+        Returns:
+            np.ndarray w/ shape (2, 1) where 2 corresponds to (xc, yc)
+        """
+        return np.array([
+            [(self.x + self.xf) / 2], [(self.y + self.yf) / 2]
+        ])
 
     def __repr__(self):
         keep_keys = ['x', 'xf', 'w', 'y', 'yf', 'h']
