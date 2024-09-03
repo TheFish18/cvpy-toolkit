@@ -1,24 +1,30 @@
 import json
 import math
-import logging
 import warnings
 from typing import List, Dict, Tuple
 
 import cv2
 import numpy as np
 
-# TODO(joshfisher): add this as _np_utils or something
-import joshpy.np_utils as npw
+from cvpy.imseg._utils import get_2d_rotation_matrix
 from cvpy.imseg import Contours
 
 
 class BBox:
-    def __init__(self, x, y, w=None, h=None, xf=None, yf=None):
+    def __init__(
+            self,
+            x: int,
+            y: int,
+            w: int | None = None,
+            h: int | None = None,
+            xf: int | None = None,
+            yf: int | None = None
+    ):
         """
         BBox container class.
         Args:
-            x: required
-            y: required
+            x: bounding box top left x coordinate
+            y: bounding box top left y coordinate
             w: either pass w and h OR
             h:
             xf: pass xf and yf
@@ -615,7 +621,7 @@ class RotatedBBox:
 
     @property
     def rotation_matrix(self):
-        return npw.rotation_matrix_2d(self.radians)
+        return get_2d_rotation_matrix(self.radians)
 
     @property
     def about(self):
@@ -671,7 +677,7 @@ class RotatedBBox:
             [self.bbox.x, self.bbox.xf, self.bbox.xf, self.bbox.x],
             [self.bbox.y, self.bbox.y, self.bbox.yf, self.bbox.yf]
         ])
-        rot_mat = npw.rotation_matrix_2d(self.radians)
+        rot_mat = get_2d_rotation_matrix(self.radians)
 
         return (rot_mat @ (arr - self.about)) + self.about
 
@@ -699,7 +705,7 @@ class RotatedBBox:
         dx, dy = d[0], d[1]
         rads = np.arctan(dy/dx)
         # negative, b/c we need to rotate in opposite direction
-        R = npw.rotation_matrix_2d(-rads)
+        R = get_2d_rotation_matrix(-rads)
         straight_bbox = R@(arr - about) + about
 
         x_min, y_min = np.min(straight_bbox, axis=1).tolist()
