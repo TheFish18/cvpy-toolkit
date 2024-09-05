@@ -4,8 +4,8 @@ from abc import abstractmethod, ABC
 import cv2
 import numpy as np
 
-from joshpy.images.cv2_wrapper import scale_image
-from joshpy.images.bbox_utils import BBox
+from cvpy.cvw import scale_image
+from cvpy.imseg import BBox
 
 
 class CoordinateClicker(ABC):
