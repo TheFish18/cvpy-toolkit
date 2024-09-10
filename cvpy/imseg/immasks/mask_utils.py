@@ -6,7 +6,7 @@ from typing import (List, Tuple, Dict, Iterator)
 import cv2
 import pandas as pd
 
-from immasks import CompositeMask
+from cvpy.imseg.immasks import CompositeMask
 
 
 class CompositeUtils:
