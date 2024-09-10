@@ -8,7 +8,7 @@ from typing import List, Tuple, Dict, Sequence
 import cv2
 import numpy as np
 
-from immasks.utils import _scale_image, _COLOR_GEN
+from cvpy.imseg.immasks._utils import _scale_image, _COLOR_GEN
 
 
 class _Mask(ABC):

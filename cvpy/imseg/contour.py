@@ -1,5 +1,5 @@
 import ast
-from typing import List, Dict
+from typing import List
 
 import numpy as np
 import cv2
@@ -209,7 +209,7 @@ class Contour:
 
     @property
     def bbox(self):
-        from joshpy.images.bbox_utils import BBox
+        from cvpy.imseg import BBox
         if self._bbox is None:
             self._bbox = BBox(*cv2.boundingRect(self.contour))
         return self._bbox
@@ -231,7 +231,7 @@ class Contours(list):
 
     @property
     def bboxes(self):
-        from joshpy.images.bbox_utils import BBoxes
+        from cvpy.imseg import BBoxes
         if self._bboxes is None:
             self._bboxes = [contour.bbox for contour in self]
         return BBoxes(self._bboxes)
