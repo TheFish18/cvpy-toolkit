@@ -6,7 +6,7 @@ import cv2
 import numpy as np
 
 
-def show_image(image: np.ndarray, wait: int = -1, window_name: str | None = None):
+def show_image(image: np.ndarray, wait: int = -1, window_name: str | None = None) -> int:
     """
     Show image.
 
