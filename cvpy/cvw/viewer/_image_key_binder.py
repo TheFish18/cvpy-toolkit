@@ -67,15 +67,15 @@ class ImageKeyBinder(ABC):
 
     @staticmethod
     def rotate_cw(image: np.ndarray, *args, **kwargs) -> tuple[np.ndarray, Any]:
-        return cv2.rotate(image, cv2.ROTATE_90_CLOCKWISE), []
+        return cv2.rotate(image, cv2.ROTATE_90_CLOCKWISE), 'cw'
 
     @staticmethod
     def rotate_ccw(image: np.ndarray, *args, **kwargs) -> tuple[np.ndarray, Any]:
-        return cv2.rotate(image, cv2.ROTATE_90_COUNTERCLOCKWISE), []
+        return cv2.rotate(image, cv2.ROTATE_90_COUNTERCLOCKWISE), 'ccw'
 
     @staticmethod
     def mirror(image, *args, **kwargs):
-        return np.fliplr(image), []
+        return np.fliplr(image), 'm'
 
     def reset_data(self, image, *args, **kwargs):
         self.data.clear()
@@ -155,23 +155,35 @@ class ImageKeyBinder(ABC):
 
         self._key_binds[k] = fn
 
-    def __call__(self, image: np.ndarray, *args, **kwargs):
-        """"""
-        last = image.copy()
+    def __call__(self, *images: np.ndarray, **kwargs):
+        """
+        Show image, applies key bindings
+        Args:
+            *image: First image is shown key_binds are applied to all images
+            **kwargs: kwargs to be passed to show_fn, key bindings, etc.
+
+        Returns:
+            image
+        """
+        last = [im.copy() for im in images]
         self.data.clear()
 
         while True:
+            image = images[0]
             k = self.show_fn(image, **kwargs)
             if k != -1:
                 k = chr(k)
                 fn = self._key_binds.get(k)
                 if fn is not None:
-                    image, data = fn(image, *args, **kwargs)
+                    images, data = zip(*[fn(im, **kwargs) for im in last])
                     self.data.append(data)
 
-                    if image is None:  # indicates to stop loop
-                        return last
+                    if images[0] is None:  # indicates to stop loop
+                        if len(images) == 1:
+                            return images[0]
+                        else:
+                            return tuple(last)
                     elif isinstance(image, np.ndarray):
-                        last = image.copy()
+                        last = [im.copy() for im in images]
                     else:
                         raise ValueError("fn must return an np.ndarray")
