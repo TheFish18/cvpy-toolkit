@@ -47,14 +47,14 @@ def scale_image(image: np.ndarray, factor=0.5):
     return cv2.resize(image, (width, height), interpolation=cv2.INTER_AREA)
 
 
-def imread(path: Path | str, flags=None) -> np.ndarray:
+def imread(path: Path | str, flags: int | None = None) -> np.ndarray:
     """
     Read an image from filesystem.
 
     Checks that path exists, raises error if it doesn't
     Args:
         path: path to file
-        flags: imread flags
+        flags: imread flags, default is to read image unchanged
 
     Returns
     -------
@@ -70,6 +70,10 @@ def imread(path: Path | str, flags=None) -> np.ndarray:
 
     if not path.exists():
         raise FileNotFoundError(f"could not find image at {path}")
+
+    if flags is None:
+        flags = cv2.IMREAD_UNCHANGED
+
     return cv2.imread(str(path), flags)
 
 
