@@ -10,5 +10,4 @@ dependencies = [
     "opencv-python>=4.10.0.84",
     "pandas>=2.2.2",
     "pdoc>=14.6.1",
-    "twine>=5.1.1",
 ]
