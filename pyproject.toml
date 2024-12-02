@@ -1,11 +1,10 @@
 [project]
 name = "cvpy-toolkit"
-version = "0.1.0"
+version = "0.1.1"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
-    "build>=1.2.2",
     "numpy>=2.1.0",
     "opencv-python>=4.10.0.84",
     "pandas>=2.2.2",
