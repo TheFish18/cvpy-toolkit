@@ -301,7 +301,7 @@ class Contours(list):
         return Contours(l)
 
     @staticmethod
-    def recall(true_contours, pred_contours):
+    def recall(true_contours: 'Contours', pred_contours: 'Contours') -> float:
         "recall = intersection / true_contour.area"
         true_contours = true_contours._contours()
         pred_contours = pred_contours._contours()
@@ -310,7 +310,7 @@ class Contours(list):
         return np.sum(intersection_mask) / true_contours.area
 
     @staticmethod
-    def precision(true_contours, pred_contours):
+    def precision(true_contours: 'Contours', pred_contours: 'Contours') -> float:
         "precision = intersection / pred_contour.area"
         true_contours = true_contours._contours()
         pred_contours = pred_contours._contours()
@@ -319,10 +319,20 @@ class Contours(list):
         return np.sum(intersection_mask) / pred_contours.area
 
     @staticmethod
-    def get_contours_from_mask(mask):
+    def get_contours_from_mask(mask: np.ndarray, chain_approx: int = cv2.CHAIN_APPROX_SIMPLE) -> 'Contours':
+        """
+        Get all the contours from a mask.
+
+        Expects that mask is a binary
+        Args:
+            mask: binary mask
+            chain_approx: chain approximation method (https://docs.opencv.org/4.x/d3/dc0/group__imgproc__shape.html#ga4303f45752694956374734a03c54d5ff:~:text=%E2%97%86-,ContourApproximationModes,-enum%20cv%3A%3AContourApproximationModes)
+
+        Returns:
+            Contours
+        """
         contours_out = []
-        # TODO(joshfisher): allow option for cv2.CHAIN_APPROX method
-        contours, _ = cv2.findContours(mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
+        contours, _ = cv2.findContours(mask, cv2.RETR_TREE, chain_approx)
         for contour in contours:
             contours_out.append(Contour(contour))
 
