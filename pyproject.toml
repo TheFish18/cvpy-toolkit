@@ -1,6 +1,6 @@
 [project]
 name = "cvpy-toolkit"
-version = "0.1.2"
+version = "0.1.3"
 authors = [
     {name="Josh Fisher", email="joshfisher81@gmail.com"},
 ]
