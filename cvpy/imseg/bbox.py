@@ -132,7 +132,8 @@ class BBox:
         return overlap.a / self.a
 
     def draw(self, image, color, border):
-        return cv2.rectangle(image, (self.x, self.y), (self.xf, self.yf), color, border)
+        # idk why, cv2 draws self.xf + 1 col of pixels and self.yf + 1 row of pxs
+        return cv2.rectangle(image, (self.x, self.y), (self.xf - 1, self.yf - 1), color, border)
 
     def crop(self, image):
         """
@@ -315,13 +316,13 @@ class BBox:
                 )
         if not h_exact:  # need to get bottom
             # gets the bottom edge
-            for x in range(self.x, self.xf - kernel_size, stride):
+            for x in range(self.x, self.xf - kernel_size + 1, stride):
                 bboxes.append(
                     BBox(x=x, y=self.yf - kernel_size, w=kernel_size, h=kernel_size)
                 )
         if not w_exact:
             # gets right edge
-            for y in range(self.y, self.yf - kernel_size, stride):
+            for y in range(self.y, self.yf - kernel_size + 1, stride):
                 bboxes.append(
                     BBox(x=self.xf - kernel_size, y=y, w=kernel_size, h=kernel_size)
                 )
