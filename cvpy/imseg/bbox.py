@@ -326,6 +326,12 @@ class BBox:
                 bboxes.append(
                     BBox(x=self.xf - kernel_size, y=y, w=kernel_size, h=kernel_size)
                 )
+
+        # append bottom right bounding box
+        bboxes.append(
+            BBox(x=self.xf - kernel_size, y=self.yf - kernel_size, w=kernel_size, h=kernel_size)
+        )
+
         return BBoxes(bboxes)
 
     def get_jitter_windows(self, centroids, window_size, jitter_xy, n_samples) -> 'BBoxes':

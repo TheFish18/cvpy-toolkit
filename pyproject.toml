@@ -1,6 +1,9 @@
 [project]
 name = "cvpy-toolkit"
-version = "0.1.1"
+version = "0.1.2"
+authors = [
+    {name="Josh Fisher", email="joshfisher81@gmail.com"},
+]
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.11"
@@ -10,3 +13,14 @@ dependencies = [
     "pandas>=2.2.2",
     "pdoc>=14.6.1",
 ]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["cvpy"]
+
+[[tool.uv.index]]
+url = "http://10.10.10.42:9791/"
+default = true
