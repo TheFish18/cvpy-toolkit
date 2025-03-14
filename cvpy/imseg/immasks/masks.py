@@ -319,6 +319,7 @@ class CategoricalMask(_Mask):
         Returns:
             CategoricalMask
         """
+        # TODO(joshfisher): currently fails if k in rename_d but not in self.class_map. Change to ignore.
         old_masks_d = {k: self.mask[:, :, v] for k, v in self.class_map.items() if k not in rename_d}
         new_masks_d = {}
         default_mask = np.zeros((self.mask.shape[:2]), dtype=np.uint8)
