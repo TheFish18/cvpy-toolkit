@@ -119,10 +119,15 @@ class ImageKeyBinder(ABC):
     def bounding_box_show_fn(self, image: np.ndarray, **kwargs):
         kwargs['window_name'] = kwargs.get('window_name', 'bbox_key_binder')
         image, window_name = self._show_helper(image, **kwargs)
+        scale = kwargs.get('scale')
         # TODO(josh) definitely a better way to do this, but this works for now
         try:
             x, y = self.data[-2]
             xf, yf = self.data[-1]
+            if scale is not None:
+                def _fn(val: int):
+                    return int(val * scale)
+                x, y, xf, yf = _fn(x), _fn(y), _fn(xf), _fn(yf)
             bbox = BBox(x, y, xf=xf, yf=yf)
             if len(image.shape) == 3:
                 color = (255, 255, 255)
@@ -179,10 +184,12 @@ class ImageKeyBinder(ABC):
                     self.data.append(data)
 
                     if images[0] is None:  # indicates to stop loop
-                        if len(images) == 1:
-                            return images[0]
-                        else:
+                        if len(last) == 1:
+                            return last[0]
+                        elif len(last) > 1:
                             return tuple(last)
+                        else:
+                            raise ValueError('idk')
                     elif isinstance(image, np.ndarray):
                         last = [im.copy() for im in images]
                     else:
